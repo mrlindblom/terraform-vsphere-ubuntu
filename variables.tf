@@ -18,10 +18,6 @@ variable "vcenter_resource_pool" {
   type = string
 }
 
-variable "vcenter_resource_pool" {
-  type = string
-}
-
 variable "vcenter_datastore" {
   type = string
 }
