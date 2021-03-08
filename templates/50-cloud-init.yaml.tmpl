@@ -1,0 +1,9 @@
+network:
+  version: 2
+  ethernets:
+    ens192:
+      addresses: [${ip_addr}]
+      gateway4: ${ip_gateway}
+      nameservers:
+        search: [${domain}]
+        addresses: [${nameservers}]

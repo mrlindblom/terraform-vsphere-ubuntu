@@ -1,0 +1,42 @@
+#cloud-config
+
+hostname: ${hostname}
+
+ssh_pwauth: yes
+
+packages:
+    - python3
+
+chpasswd:
+  list: |
+    root:${hashed_passwd}
+  expire: False
+
+users:
+  - name: ${username}
+    passwd: ${hashed_passwd}
+    lock_passwd: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: [adm, sudo]
+    ssh_authorized_keys:
+%{ for authorized_key in authorized_keys ~}
+      - ${authorized_key}
+%{ endfor ~}
+
+write_files:
+  - encoding: base64
+    content: ${netplan_base64}
+    path: /etc/netplan/50-cloud-init.yaml
+  - encoding: base64
+    content: ${server_init_base64}
+    path: server_init.sh
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: True
+
+runcmd:
+  - bash server_init.sh
+#  - netplan apply
+
