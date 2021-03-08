@@ -18,32 +18,29 @@ data "vsphere_network" "network" {
 }
 
 data "vsphere_virtual_machine" "template" {
-  count         = length(var.nodes)
-  name          = var.nodes[count.index].vsphere_template
+  name          = var.vcenter_template
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 resource "vsphere_virtual_machine" "vm" {
-  count            = length(var.nodes)
-  name             = var.nodes[count.index].hostname
+  name             = var.hostname
   resource_pool_id = data.vsphere_resource_pool.pool.id
   datastore_id     = data.vsphere_datastore.datastore.id
 
-  num_cpus = var.nodes[count.index].vcpu
-  memory   = var.nodes[count.index].memory_size
+  num_cpus = var.vcpu
+  memory   = var.memory
+  guest_id = data.vsphere_virtual_machine.template.guest_id
 
-  guest_id = data.vsphere_virtual_machine.template[count.index].guest_id
-
-  scsi_type = data.vsphere_virtual_machine.template[count.index].scsi_type
+  scsi_type = data.vsphere_virtual_machine.template.scsi_type
 
   network_interface {
     network_id   = data.vsphere_network.network.id
-    adapter_type = data.vsphere_virtual_machine.template[count.index].network_interface_types[0]
+    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
 
   disk {
     label            = "os"
-    size             = var.nodes[count.index].volume_size
+    size             = var.volume_size
     thin_provisioned = true
   }
 
@@ -54,23 +51,24 @@ resource "vsphere_virtual_machine" "vm" {
   vapp {
     properties = {
       user-data = base64encode(templatefile("${path.module}/templates/cloud-init.yaml.tmpl", {
-        hostname           = var.nodes[count.index].hostname
+        hostname           = var.hostname
         hashed_passwd      = var.hashed_passwd
         server_init_base64 = var.server_init_base64
+        server_done_base64 = var.server_done_base64
         authorized_keys    = var.authorized_keys
         username           = var.username
         netplan_base64 = base64encode(templatefile("${path.module}/templates/50-cloud-init.yaml.tmpl", {
-          ip_addr     = var.nodes[count.index].ip_addr
-          ip_gateway  = var.nodes[count.index].gateway
-          domain      = var.nodes[count.index].domain
-          nameservers = var.nodes[count.index].nameservers
+          ip_addr     = var.ip_addr
+          ip_gateway  = var.ip_gateway
+          domain      = var.domain
+          nameservers = var.nameservers
         }))
       }))
     }
   }
 
   clone {
-    template_uuid = data.vsphere_virtual_machine.template[count.index].id
+    template_uuid = data.vsphere_virtual_machine.template.id
   }
 
   lifecycle {
@@ -78,9 +76,4 @@ resource "vsphere_virtual_machine" "vm" {
       vapp
     ]
   }
-}
-
-output "template" {
-  value = data.vsphere_virtual_machine.template
-
 }

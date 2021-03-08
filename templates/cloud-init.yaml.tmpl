@@ -27,16 +27,29 @@ write_files:
   - encoding: base64
     content: ${netplan_base64}
     path: /etc/netplan/50-cloud-init.yaml
+%{ if server_init_base64 != null }
   - encoding: base64
     content: ${server_init_base64}
     path: server_init.sh
+%{ endif ~}
+%{ if server_done_base64 != null }
+  - encoding: base64
+    content: ${server_done_base64}
+    path: server_done.sh
+%{ endif ~}
 
 power_state:
+  delay: "+1"
   mode: reboot
-  timeout: 30
+  timeout: 180
   condition: True
 
 runcmd:
+%{ if server_init_base64 != null }
   - bash server_init.sh
-#  - netplan apply
+%{ endif ~}
+  - netplan apply
+%{ if server_done_base64 != null }
+  - bash server_done.sh
+%{ endif ~}
 
