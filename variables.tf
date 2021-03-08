@@ -14,6 +14,11 @@ variable "vcenter_datacenter" {
   type = string
 }
 
+variable "vcenter_cluster_name" {
+  type = string
+}
+
+
 variable "vcenter_resource_pool" {
   type = string
 }
