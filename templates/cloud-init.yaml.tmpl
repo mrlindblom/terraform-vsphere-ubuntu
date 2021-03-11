@@ -15,6 +15,7 @@ chpasswd:
 users:
   - name: ${username}
     passwd: ${hashed_passwd}
+    shell: /bin/bash
     lock_passwd: false
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: [adm, sudo]
