@@ -34,11 +34,11 @@ write_files:
     path: /root/server_init.sh
 %{ endif ~}
 
-power_state:
-  delay: "+1"
-  mode: reboot
-  timeout: 180
-  condition: True
+#power_state:
+#  delay: "+1"
+#  mode: reboot
+#  timeout: 180
+#  condition: True
 
 runcmd:
   - netplan apply
