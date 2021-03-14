@@ -64,10 +64,6 @@ variable "server_init_base64" {
   default = null
 }
 
-variable "server_done_base64" {
-  type    = string
-  default = null
-}
 variable "domain" {
   type    = string
   default = "domain.local"

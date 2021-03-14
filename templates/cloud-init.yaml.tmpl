@@ -31,12 +31,7 @@ write_files:
 %{ if server_init_base64 != null }
   - encoding: base64
     content: ${server_init_base64}
-    path: server_init.sh
-%{ endif ~}
-%{ if server_done_base64 != null }
-  - encoding: base64
-    content: ${server_done_base64}
-    path: server_done.sh
+    path: /root/server_init.sh
 %{ endif ~}
 
 power_state:
@@ -46,11 +41,8 @@ power_state:
   condition: True
 
 runcmd:
-%{ if server_init_base64 != null }
-  - bash server_init.sh
-%{ endif ~}
   - netplan apply
-%{ if server_done_base64 != null }
-  - bash server_done.sh
+%{ if server_init_base64 != null }
+  - bash /root/server_init.sh
 %{ endif ~}
 
