@@ -54,7 +54,6 @@ resource "vsphere_virtual_machine" "vm" {
         hostname           = var.hostname
         hashed_passwd      = var.hashed_passwd
         server_init_base64 = var.server_init_base64
-        server_done_base64 = var.server_done_base64
         authorized_keys    = var.authorized_keys
         username           = var.username
         netplan_base64 = base64encode(templatefile("${path.module}/templates/50-cloud-init.yaml.tmpl", {
