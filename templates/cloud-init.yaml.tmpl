@@ -33,6 +33,13 @@ write_files:
     content: ${server_init_base64}
     path: /root/server_init.sh
 %{ endif ~}
+%{ for config_file in config_filess ~}
+  - encoding: base64
+    content: ${config_file.content}
+    path: ${config_file.content}
+    owner: ${config_file.owner}
+    permissions: ${config_file.permissions}
+%{ endfor ~}
 
 #power_state:
 #  delay: "+1"
