@@ -36,7 +36,7 @@ write_files:
 %{ for config_file in config_files ~}
   - encoding: base64
     content: ${config_file.content}
-    path: ${config_file.content}
+    path: ${config_file.path}
     owner: ${config_file.owner}
     permissions: ${config_file.permissions}
 %{ endfor ~}
