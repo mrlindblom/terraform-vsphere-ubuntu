@@ -33,7 +33,7 @@ write_files:
     content: ${server_init_base64}
     path: /root/server_init.sh
 %{ endif ~}
-%{ for config_file in config_filess ~}
+%{ for config_file in config_files ~}
   - encoding: base64
     content: ${config_file.content}
     path: ${config_file.content}

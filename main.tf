@@ -56,6 +56,7 @@ resource "vsphere_virtual_machine" "vm" {
         server_init_base64 = var.server_init_base64
         authorized_keys    = var.authorized_keys
         username           = var.username
+        config_files       = var.config_files
         netplan_base64 = base64encode(templatefile("${path.module}/templates/50-cloud-init.yaml.tmpl", {
           ip_addr     = var.ip_addr
           ip_gateway  = var.ip_gateway
