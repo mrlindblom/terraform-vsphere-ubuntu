@@ -88,15 +88,11 @@ variable "username" {
 }
 
 variable "config_files" {
-
-}
-
-variable "config_files" {
   type = list(object({
     content     = string
     path        = string
     owner       = string
     permissions = string
   }))
-  default = None
+  default = []
 }
