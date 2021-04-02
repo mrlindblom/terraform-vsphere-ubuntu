@@ -38,6 +38,7 @@ resource "vsphere_virtual_machine" "vm" {
     adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
 
+  enable_disk_uuid = true
   disk {
     label            = "os"
     size             = var.volume_size
