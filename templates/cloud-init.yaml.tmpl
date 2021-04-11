@@ -50,6 +50,6 @@ write_files:
 runcmd:
   - netplan apply
 %{ if server_init_base64 != null }
-  - bash /root/server_init.sh | logger
+  - bash /root/server_init.sh | logger --tag server_init
 %{ endif ~}
 
